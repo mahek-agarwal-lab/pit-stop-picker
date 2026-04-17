@@ -1,0 +1,43 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-sans: "Helvetica Neue", "Arial", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "ui-monospace", "SFMono-Regular", "Courier New", "Courier", monospace;
+
+  --color-high-bg: #0A0A0B;
+  --color-high-surface: #141416;
+  --color-high-surface-alt: #1C1C1F;
+  --color-high-border: #2C2C30;
+  --color-high-accent: #00E676;
+  --color-high-stop: #FF3D00;
+  --color-high-text: #E1E1E6;
+  --color-high-text-dim: #8E8E93;
+}
+
+@layer base {
+  body {
+    @apply bg-high-bg text-high-text font-sans antialiased;
+  }
+}
+
+.high-density-header {
+  @apply bg-high-surface border-b border-high-border;
+}
+
+.high-density-card {
+  @apply bg-high-surface border border-high-border rounded-xl;
+}
+
+.high-density-input {
+  @apply bg-high-bg border border-high-border rounded-md text-high-text font-mono;
+}
+
+.high-density-btn-active {
+  @apply bg-high-accent text-high-bg border-high-accent;
+}
+
+.high-density-sidebar {
+  @apply bg-high-surface-alt border-l border-high-border;
+}
+
