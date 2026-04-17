@@ -34,10 +34,12 @@ export default function App() {
   const [records, setRecords] = useState<PickingRecord[]>([]);
   const [activeTimer, setActiveTimer] = useState<ActiveTimer | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [orderNumber, setOrderNumber] = useState('');
+  const [orderNumber, setOrderNumber] = useState('1');
   const [pickerId, setPickerId] = useState<PickerId>(1);
   const [isError, setIsError] = useState(false);
   const [nextSequence, setNextSequence] = useState(1);
+
+  const orderOptions = Array.from({ length: 40 }, (_, i) => (i + 1).toString());
 
   // Interval ref for the clock
   const intervalRef = useRef<number | null>(null);
@@ -63,10 +65,10 @@ export default function App() {
 
   // Sync order number to next sequence if empty
   useEffect(() => {
-    if (!orderNumber && !activeTimer) {
-      setOrderNumber(`ORD-${nextSequence.toString().padStart(4, '0')}`);
+    if (!activeTimer) {
+      setOrderNumber(nextSequence.toString());
     }
-  }, [nextSequence, orderNumber, activeTimer]);
+  }, [nextSequence, activeTimer]);
 
   // Save to LocalStorage
   useEffect(() => {
@@ -122,8 +124,7 @@ export default function App() {
     
     // Increment sequence only if we used the auto-generated one at any point
     // We check against the orderNumber being recorded
-    const currentAutoNum = `ORD-${nextSequence.toString().padStart(4, '0')}`;
-    if (orderNumber === currentAutoNum) {
+    if (orderNumber === nextSequence.toString() && nextSequence < 40) {
       setNextSequence(prev => prev + 1);
     }
 
@@ -139,7 +140,7 @@ export default function App() {
     const headers = ['Order Number', 'Picker ID', 'Start Time', 'End Time', 'Duration (ms)', 'Duration (Formatted)', 'Shift'];
     const rows = records.map(r => [
       `"${r.orderNumber}"`, // Quote strings for CSV safety
-      r.pickerId,
+      `"${r.pickerId}"`,
       `"${new Date(r.startTime).toLocaleString()}"`,
       `"${new Date(r.endTime).toLocaleString()}"`,
       r.duration,
@@ -208,28 +209,30 @@ export default function App() {
             <div className="flex flex-col justify-center space-y-6">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-high-text-dim">Order Number</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-high-text-dim">Order Number (1-40)</label>
                   {activeTimer && (
-                    <span className="text-[9px] font-mono text-high-accent uppercase animate-pulse">Session Active</span>
+                    <span className="text-[9px] font-mono text-high-accent uppercase animate-pulse">Live</span>
                   )}
                 </div>
-                <input 
-                  type="text"
-                  placeholder="ORD-0000"
+                <select 
                   value={orderNumber}
                   onChange={(e) => setOrderNumber(e.target.value)}
-                  className={`w-full bg-high-bg border ${isError ? 'border-high-stop' : 'border-high-border'} rounded-md px-4 py-3 font-mono text-2xl text-high-text focus:outline-none focus:border-high-accent transition-all`}
-                />
+                  className="w-full bg-high-bg border border-high-border rounded-md px-4 py-3 font-mono text-2xl text-high-text focus:outline-none focus:border-high-accent transition-all appearance-none cursor-pointer"
+                >
+                  {orderOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-high-text-dim">Picker Assignment</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {[1, 2, 3, 4].map((id) => (
+                <label className="text-[10px] font-bold uppercase tracking-wider text-high-text-dim">Picker ID / Assignment</label>
+                <div className="grid grid-cols-5 gap-2">
+                  {[1, 2, 3, 4, 'Packer'].map((id) => (
                     <button
                       key={id}
                       onClick={() => setPickerId(id as PickerId)}
-                      className={`h-14 rounded-md font-bold text-lg transition-all ${
+                      className={`h-14 rounded-md font-bold text-sm transition-all ${
                         pickerId === id 
                         ? 'bg-high-accent text-high-bg border-high-accent' 
                         : 'bg-high-surface-alt border border-high-border text-high-text-dim hover:border-high-text-dim'

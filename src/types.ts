@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type PickerId = 1 | 2 | 3 | 4;
+export type PickerId = 1 | 2 | 3 | 4 | 'Packer';
 
 export interface PickingRecord {
   id: string;
