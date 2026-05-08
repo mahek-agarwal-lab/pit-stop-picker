@@ -39,7 +39,7 @@ export default function App() {
   const [isError, setIsError] = useState(false);
   const [nextSequence, setNextSequence] = useState(1);
 
-  const orderOptions = Array.from({ length: 40 }, (_, i) => (i + 1).toString());
+  const orderOptions = Array.from({ length: 60 }, (_, i) => (i + 1).toString());
 
   // Interval ref for the clock
   const intervalRef = useRef<number | null>(null);
@@ -124,7 +124,7 @@ export default function App() {
     
     // Increment sequence only if we used the auto-generated one at any point
     // We check against the orderNumber being recorded
-    if (orderNumber === nextSequence.toString() && nextSequence < 40) {
+    if (orderNumber === nextSequence.toString() && nextSequence < 60) {
       setNextSequence(prev => prev + 1);
     }
 
@@ -358,4 +358,5 @@ export default function App() {
     </div>
   );
 }
+
 
