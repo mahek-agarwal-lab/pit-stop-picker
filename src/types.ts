@@ -20,3 +20,21 @@ export interface ActiveTimer {
   pickerId: PickerId;
   startTime: number;
 }
+
+export interface O2COrder {
+  id: string;
+  orderNumber: string;
+  idealOffsetSeconds: number; // Seconds from start of simulation
+  status: 'PENDING' | 'ARRIVED' | 'ASSIGNING' | 'COMPLETED';
+  assignStartTime?: number; // Timestamp
+  assignEndTime?: number; // Timestamp
+  o2cGapSeconds?: number; // Gap between arrival and trigger of assignment in seconds
+  assignDurationSeconds?: number; // Duration of assigning in seconds
+}
+
+export interface O2CSimulation {
+  id: string;
+  startTime: number; // Timestamp
+  status: 'IDLE' | 'RUNNING' | 'PAUSED' | 'COMPLETED';
+  orders: O2COrder[];
+}

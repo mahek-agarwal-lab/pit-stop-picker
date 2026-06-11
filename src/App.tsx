@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PickerId, PickingRecord, ActiveTimer } from './types.ts';
+import O2CDashboard from './components/O2CDashboard.tsx';
 
 /**
  * Format milliseconds into HH:MM:SS.ms
@@ -31,6 +32,7 @@ function formatTime(ms: number) {
 }
 
 export default function App() {
+  const [currentTab, setCurrentTab] = useState<'picker' | 'o2c'>('picker');
   const [records, setRecords] = useState<PickingRecord[]>([]);
   const [activeTimer, setActiveTimer] = useState<ActiveTimer | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -174,6 +176,31 @@ export default function App() {
             CHRONO-PICK <span className="font-light opacity-50 ml-1">v2.4</span>
           </h1>
         </div>
+
+        {/* Tab Selection */}
+        <div className="flex bg-high-bg border border-high-border rounded-md p-0.5">
+          <button
+            onClick={() => setCurrentTab('picker')}
+            className={`px-3 py-1.5 text-[11px] font-bold rounded transition-all uppercase tracking-wider font-mono ${
+              currentTab === 'picker'
+                ? 'bg-high-accent text-high-bg font-black'
+                : 'text-high-text-dim hover:text-high-text'
+            }`}
+          >
+            Picker Stopwatch
+          </button>
+          <button
+            onClick={() => setCurrentTab('o2c')}
+            className={`px-3 py-1.5 text-[11px] font-bold rounded transition-all uppercase tracking-wider font-mono ${
+              currentTab === 'o2c'
+                ? 'bg-high-accent text-high-bg font-black'
+                : 'text-high-text-dim hover:text-high-text'
+            }`}
+          >
+            O2C Dashboard
+          </button>
+        </div>
+
         <div className="hidden md:flex gap-8 text-[11px] font-mono uppercase tracking-wider text-high-text-dim">
           <span>Station: <b className="text-high-text ml-1">DS-09</b></span>
           <span>Tracker: <b className="text-high-text ml-1">M. Chen</b></span>
@@ -181,9 +208,12 @@ export default function App() {
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Main Measurement Content */}
-        <main className="flex-1 p-8 overflow-y-auto space-y-8">
+      {currentTab === 'o2c' ? (
+        <O2CDashboard />
+      ) : (
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+          {/* Main Measurement Content */}
+          <main className="flex-1 p-8 overflow-y-auto space-y-8">
           <div className="bg-high-surface border border-high-border rounded-xl p-10 grid grid-cols-1 lg:grid-cols-2 gap-10 shadow-lg">
             {/* Timer Section */}
             <div className="flex flex-col items-center justify-center lg:border-r border-high-border lg:pr-10">
@@ -355,6 +385,7 @@ export default function App() {
           </div>
         </aside>
       </div>
+      )}
     </div>
   );
 }
